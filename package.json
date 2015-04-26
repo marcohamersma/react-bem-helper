@@ -1,6 +1,6 @@
 {
   "name": "react-bem-helper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "cleans up the creation of BEM style elements",
   "main": "index.js",
   "scripts": {
