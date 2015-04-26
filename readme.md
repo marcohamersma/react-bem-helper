@@ -4,11 +4,11 @@
 ## Why?
 I found myself writing code like this a lot in my React components:
 ```html
-<div className="g-componentName">
-  <div className="g-componentName__inner">
+<div className="c-componentName">
+  <div className="c-componentName__inner">
     Some test
-    <button className="g-componentName__button g-componentName__button--left">Button</button>
-    <button className="g-componentName__button g-componentName__button--right">Button</button>
+    <button className="c-componentName__button c-componentName__button--left">Button</button>
+    <button className="c-componentName__button c-componentName__button--right">Button</button>
   </div>
 </div>
 ```
@@ -16,7 +16,7 @@ I found myself writing code like this a lot in my React components:
 Compare that to SCSS, where you might write components something like this:
 
 ```scss
-  .g-componentName {
+  .c-componentName {
     background: red;
 
     &__button {
@@ -83,16 +83,16 @@ Calling the bemHelper with no arguments causes it to return an object with a cla
 var BEMHelper = require('react-bem-helper'),
     bemHelper = new BEMHelper('componentName');
 
-bemHelper(); // returns { className: 'g-componentName' }
+bemHelper(); // returns { className: 'c-componentName' }
 ```
 
 The bemHelper supports up to three arguments: Element, Modifiers, and extra classes:
 
 #### Element
-To generate a class like `g-componentName__header`, pass `"header"` as the first argument to the bemHelper:
+To generate a class like `c-componentName__header`, pass `"header"` as the first argument to the bemHelper:
 
 ```js
-  bemHelper('header'); // returns { className: 'g-componentName__header' }
+  bemHelper('header'); // returns { className: 'c-componentName__header' }
 ```
 
 The element argument only supports strings.
@@ -102,20 +102,20 @@ Modifiers can be added as a `String`, `Array`, or `Object`. For every modifier a
 
 ```js
   bemHelper(null, 'active');
-  // { className: 'g-componentName--active'}
+  // { className: 'c-componentName--active'}
 
   bemHelper('lol', 'active');
-  // { className: 'g-componentName__lol--active'}
+  // { className: 'c-componentName__lol--active'}
   
   bemHelper('lol', ['active', ['funny']);
-  // { className: 'g-componentName__lol g-componentName__lol--active g-componentName__lol--funny'}
+  // { className: 'c-componentName__lol c-componentName__lol--active c-componentName__lol--funny'}
 
   bemHelper('lol', {
     active: true,
     funny: false,
     playing: function() { return false;}
   });
-  // { className: 'g-componentName__lol--active'}
+  // { className: 'c-componentName__lol--active'}
 ```
 If you pass an object as the modifiers argument, the helper will add the keys as classes for which their corresponding values are true. If a function is passed as a value, this function is executed.
 
