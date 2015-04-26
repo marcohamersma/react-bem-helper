@@ -4,7 +4,7 @@
   "description": "cleans up the creation of BEM style elements",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine tests.js"
+    "test": "jasmine"
   },
   "author": "Marco Hamersma",
   "license": "MIT",
