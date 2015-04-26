@@ -1,7 +1,7 @@
 {
   "name": "react-bem-helper",
   "version": "0.0.2",
-  "description": "cleans up the creation of BEM style elements",
+  "description": "allows you to easily add BEM-style element and modifier classes to React elements, while hopefully making it easier to scan.",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"
