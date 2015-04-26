@@ -36,7 +36,7 @@ A new helper is initialized with a an options object or a string representing th
 You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
 
 ## Example
-Here's how you would return the structure above when using the helper.
+Here's how you would return the example's HTML structure when using the helper.
 
 ```js
 var React     = require('react'),
@@ -59,6 +59,9 @@ module.exports = React.createClass({
 ```
 
 ## Usage
+### Installation
+`npm install react-bem-helper`;
+
 ### Preparing the helper
 Require the helper for your React component, and then instantiate a new instance of it, supplying an options object or a string representing the (block) name of the component.
 
