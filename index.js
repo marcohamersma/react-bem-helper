@@ -49,7 +49,7 @@ module.exports = function(options) {
   }
 
   if (options.prefix === void 0) {
-    options.prefix = 'g-';
+    options.prefix = 'c-';
   }
 
   return function(element, modifiers, extraClassNames) {
