@@ -33,7 +33,7 @@ Compare that to SCSS, where you might write components something like this:
 `react-bem-helper` allows you to write in a similar-ish DRY fashion, taking away some of the repetition and hopefully making it easier to scan.
 
 ## How does it work?
-A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, like ` { classNames: c-componentName }`. As you can see, a `c-` prefix is automatically added, but this can be changed.
+A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'c-componentName' }`. As you can see, a `c-` prefix is automatically added, but this can be changed through an [options object](#preparing-the-helper).
 
 You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
 
