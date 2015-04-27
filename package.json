@@ -20,7 +20,8 @@
     "react",
     "classnames",
     "modifier",
-    "classes"
+    "classes",
+    "react-component"
   ],
   "bugs": {
     "url": "https://github.com/marcohamersma/react-bem-helper/issues"
