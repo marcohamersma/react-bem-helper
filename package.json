@@ -11,11 +11,6 @@
   "devDependencies": {
     "jasmine": "^2.2.1"
   },
-  "dependencies": {
-    "react": "^0.13.2",
-    "eslint": "^0.20.0",
-    "jasmine": "^2.2.1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/marcohamersma/react-bem-helper.git"
