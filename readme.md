@@ -42,17 +42,18 @@ Here's how you would return the example's HTML structure when using the helper.
 
 ```js
 var React     = require('react'),
-    BEMHelper = require('react-bem-helper'),
-    bemHelper = new BEMHelper('componentName');
+    BEMHelper = require('react-bem-helper');
 
 module.exports = React.createClass({
   render: function() {
+    var classes = new BEMHelper('componentName');
+
     return (
-      <div {...bemHelper()}>
-        <div {...bemHelper('inner')}>
+      <div {...classes()}>
+        <div {...classes('inner')}>
           Some test
-          <button {...bemHelper('button', 'left')}>Button</button>
-          <button {...bemHelper('button', 'right')}>Button</button>
+          <button {...classes('button', 'left')}>Button</button>
+          <button {...classes('button', 'right')}>Button</button>
         </div>
       </div>
     );
@@ -99,7 +100,10 @@ The bemHelper supports up to three arguments: element, modifiers, and extra clas
 To generate a class like `c-componentName__header`, pass `"header"` as the first argument to the bemHelper:
 
 ```js
-  bemHelper('header'); // returns { className: 'c-componentName__header' }
+var BEMHelper = require('react-bem-helper'),
+    bemHelper = new BEMHelper('componentName');
+
+bemHelper('header'); // returns { className: 'c-componentName__header' }
 ```
 
 The element argument only supports strings.
@@ -108,21 +112,24 @@ The element argument only supports strings.
 Modifiers can be added as a `String`, `Array`, or `Object`. For every modifier an additional class is generated, based upon either the block name or element name:
 
 ```js
-  bemHelper(null, 'active');
-  // { className: 'c-componentName--active'}
+var BEMHelper = require('react-bem-helper'),
+    bemHelper = new BEMHelper('componentName');
 
-  bemHelper('lol', 'active');
-  // { className: 'c-componentName__lol--active'}
-  
-  bemHelper('lol', ['active', 'funny']);
-  // { className: 'c-componentName__lol c-componentName__lol--active c-componentName__lol--funny'}
+bemHelper(null, 'active');
+// { className: 'c-componentName--active'}
 
-  bemHelper('lol', {
-    active: true,
-    funny: false,
-    playing: function() { return false;}
-  });
-  // { className: 'c-componentName__lol--active'}
+bemHelper('lol', 'active');
+// { className: 'c-componentName__lol--active'}
+
+bemHelper('lol', ['active', 'funny']);
+// { className: 'c-componentName__lol c-componentName__lol--active c-componentName__lol--funny'}
+
+bemHelper('lol', {
+  active: true,
+  funny: false,
+  playing: function() { return false;}
+});
+// { className: 'c-componentName__lol--active'}
 ```
 If you pass an object as the modifiers argument, the helper will add the keys as classes for which their corresponding values are true. If a function is passed as a value, this function is executed.
 
@@ -130,14 +137,17 @@ If you pass an object as the modifiers argument, the helper will add the keys as
 This argument allows you to do add extra classes to the element. Like the modifiers, extra classes can be added as a `String`, `Array`, or `Object`. The behaviour is the same, except that the classes are added as passed, and no prefix or block name is added.
 
 ```js
-  bemHelper('', '', ['one', 'two']);
-  // { className: 'c-componentName one two'}
-  bemHelper('', '', {
-    active: true,
-    funny: false,
-    playing: function() { return false;}
-  });
-  // { className: 'c-componentName active'}
+var BEMHelper = require('react-bem-helper'),
+    bemHelper = new BEMHelper('componentName');
+
+bemHelper('', '', ['one', 'two']);
+// { className: 'c-componentName one two'}
+bemHelper('', '', {
+  active: true,
+  funny: false,
+  playing: function() { return false;}
+});
+// { className: 'c-componentName active'}
 ```
 
 ## License
