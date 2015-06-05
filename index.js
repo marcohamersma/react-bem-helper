@@ -48,10 +48,6 @@ module.exports = function(options) {
     options = { name: options };
   }
 
-  if (options.prefix === void 0) {
-    options.prefix = 'c-';
-  }
-
   return function(element, modifiers, extraClassNames) {
     var blockName    = options.name,
         rootName     = blockName,
