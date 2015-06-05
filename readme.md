@@ -64,6 +64,22 @@ module.exports = React.createClass({
 });
 ```
 
+For optimization reasons, you might want to move `new BEMHelper` out of the render function. On occasions I've done something like this:
+
+```js
+…
+module.exports = React.createClass({
+  bemHelper: new BEMHelper('componentName'),
+  render: function() {
+    var classes = this.bemHelper;
+    return (
+      <div {...classes()}>
+      …
+    )
+  }
+})
+```
+
 ## Usage
 ### Installation
 `npm install react-bem-helper`
