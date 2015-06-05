@@ -33,7 +33,7 @@ Compare that to SCSS, where you might write components something like this:
 `react-bem-helper` allows you to write in a similar-ish DRY fashion, taking away some of the repetition and hopefully making it easier to scan.
 
 ## How does it work?
-A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'c-componentName' }`. As you can see, a `c-` prefix is automatically added, but this can be changed through an [options object](#preparing-the-helper).
+A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'componentName' }`. If you want, a prefix like `c-` can be automatically added by supplying an [options object](#preparing-the-helper).
 
 You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
 
@@ -46,7 +46,10 @@ var React     = require('react'),
 
 module.exports = React.createClass({
   render: function() {
-    var classes = new BEMHelper('componentName');
+    var classes = new BEMHelper({
+      name: 'componentName',
+      prefix: 'c-'
+    });
 
     return (
       <div {...classes()}>
@@ -68,17 +71,13 @@ module.exports = React.createClass({
 ### Preparing the helper
 Require the helper for your React component, and then instantiate a new instance of it, supplying an options object or a string representing the (block) name of the component.
 
-**by default, a prefix `c-` is added to the block class**, this can be changed by passing an options object with a `prefix` key:
 ```javascript
 var BEMhelper = require('react-bem-helper');
 
-// Passing an options object while clearing the prefix
-var bemHelper = new BEMHelper({
-  name: 'componentName',
-  prefix: null
-});
+// Make 'componentName' the base name
+var bemHelper = new BEMHelper('componentName')
 
-// Passing an options object with a custom prefix
+// Or pass an options object with a prefix to be applied to all components
 var bemHelper2 = new BEMHelper({
   name: 'componentName',
   prefix: 'mh-'
@@ -91,7 +90,7 @@ When executed, the helper returns an object with a `className` property. When th
 var BEMHelper = require('react-bem-helper'),
     bemHelper = new BEMHelper('componentName');
 
-bemHelper(); // returns { className: 'c-componentName' }
+bemHelper(); // returns { className: 'componentName' }
 ```
 
 The bemHelper supports up to three arguments: element, modifiers, and extra classes:
@@ -103,7 +102,7 @@ To generate a class like `c-componentName__header`, pass `"header"` as the first
 var BEMHelper = require('react-bem-helper'),
     bemHelper = new BEMHelper('componentName');
 
-bemHelper('header'); // returns { className: 'c-componentName__header' }
+bemHelper('header'); // returns { className: 'componentName__header' }
 ```
 
 The element argument only supports strings.
@@ -116,20 +115,20 @@ var BEMHelper = require('react-bem-helper'),
     bemHelper = new BEMHelper('componentName');
 
 bemHelper(null, 'active');
-// { className: 'c-componentName--active'}
+// { className: 'componentName--active'}
 
 bemHelper('lol', 'active');
-// { className: 'c-componentName__lol--active'}
+// { className: 'componentName__lol--active'}
 
 bemHelper('lol', ['active', 'funny']);
-// { className: 'c-componentName__lol c-componentName__lol--active c-componentName__lol--funny'}
+// { className: 'componentName__lol componentName__lol--active componentName__lol--funny'}
 
 bemHelper('lol', {
   active: true,
   funny: false,
   playing: function() { return false;}
 });
-// { className: 'c-componentName__lol--active'}
+// { className: 'componentName__lol--active'}
 ```
 If you pass an object as the modifiers argument, the helper will add the keys as classes for which their corresponding values are true. If a function is passed as a value, this function is executed.
 
