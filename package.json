@@ -4,17 +4,14 @@
   "description": "allows you to easily add BEM-style element and modifier classes to React elements, while hopefully making it easier to scan.",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "lint": "eslint ."
   },
   "author": "Marco Hamersma",
   "license": "MIT",
   "devDependencies": {
-    "jasmine": "^2.2.1"
-  },
-  "dependencies": {
-    "react": "^0.13.2",
-    "eslint": "^0.20.0",
-    "jasmine": "^2.2.1"
+    "jasmine": "^2.2.1",
+    "eslint": "^0.20.0"
   },
   "repository": {
     "type": "git",
