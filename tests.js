@@ -39,6 +39,44 @@ describe('react-bem-helper', function() {
     expect(bemhelper('element', 'modifier')).toEqual(resultWithClassName('block__element block__element--modifier'));
   });
 
+  describe('when using object as arguments', function() {
+    it ('should return className for the block when empty object given', function() {
+      expect(bemhelper({})).toEqual(resultWithClassName('block'));
+    });
+
+    it('should return className for the element when element is given', function() {
+      expect(bemhelper({
+        element: 'element'
+      })).toEqual(resultWithClassName('block__element'));
+    });
+
+    it('should return classNames for the block and modifier when modifier given', function() {
+      expect(bemhelper({
+        modifier: 'modifier'
+      })).toEqual(resultWithClassName('block block--modifier'));
+    });
+
+    it('should return classNames for the block and modifier when modifier given as object', function() {
+      expect(bemhelper({
+        modifiers: { 'modifier': true }
+      })).toEqual(resultWithClassName('block block--modifier'));
+    });
+
+    it('should return classNames for the element and the modifier when a modifier is given', function() {
+      expect(bemhelper({
+        element: 'element',
+        modifier: 'modifier'
+      })).toEqual(resultWithClassName('block__element block__element--modifier'));
+    });
+
+    it('should return classNames for the element and the modifier when a modifier is given', function() {
+      expect(bemhelper({
+        element: 'element',
+        modifier: 'modifier'
+      })).toEqual(resultWithClassName('block__element block__element--modifier'));
+    });
+  });
+
   describe(', when given multiple modifiers', function() {
     it('as an array, should return classNames for the element and each modifier given', function() {
       var modifiers = ['one', 'two'];
@@ -56,6 +94,7 @@ describe('react-bem-helper', function() {
 
       expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--two block--five'));
       expect(bemhelper(null, modifiers)).toEqual(resultWithClassName('block block--two block--five'));
+      expect(bemhelper({ modifiers: modifiers })).toEqual(resultWithClassName('block block--two block--five'));
     });
   });
 
@@ -64,6 +103,7 @@ describe('react-bem-helper', function() {
     expect(bemhelper('', null, extraClasses)).toEqual(resultWithClassName('block one two'));
 
     expect(bemhelper('element', '', extraClasses)).toEqual(resultWithClassName('block__element one two'));
+    expect(bemhelper({ extra: extraClasses })).toEqual(resultWithClassName('block one two'));
   });
 
   it('should append extra classNames for truthy values when given as an object', function() {
@@ -74,6 +114,7 @@ describe('react-bem-helper', function() {
     };
 
     expect(bemhelper('', '', extraClasses)).toEqual(resultWithClassName('block two'));
+    expect(bemhelper({ extra: extraClasses })).toEqual(resultWithClassName('block two'));
   });
 
   it('when given a prefix, should append generated BEM classes with that', function() {

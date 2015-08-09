@@ -13,8 +13,8 @@ function isFunction(functionToCheck) {
 }
 
 function objectToArray(object) {
-  var keys   = Object.keys(object),
-      output = [];
+  var keys   = Object.keys(object);
+  var output = [];
 
   keys.forEach(function(key) {
     var predicate = object[key];
@@ -48,10 +48,20 @@ module.exports = function(options) {
     options = { name: options };
   }
 
-  return function(element, modifiers, extraClassNames) {
-    var blockName    = options.name,
-        rootName     = blockName,
-        classNames   = [];
+  return function(first, modifiers, extraClassNames) {
+    var blockName    = options.name;
+    var rootName     = blockName;
+    var classNames   = [];
+    var element;
+
+    // This means the first parameter is not the element, but a configuration variable
+    if (isObject(first)) {
+      element = first.element;
+      modifiers = first.modifiers || first.modifier;
+      extraClassNames = first.extra;
+    } else {
+      element = first;
+    }
 
     if (element) {
       rootName += '__' + element;
