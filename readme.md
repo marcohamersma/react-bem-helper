@@ -38,7 +38,7 @@ A new helper instance is created with a an options object or a string representi
 You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
 
 ## Example
-Here's how you would return [the example HTML structure]((#why) when using the helper.
+Here's how you would return [the example HTML structure](#why) when using the helper.
 
 ```js
 var React     = require('react');
@@ -111,14 +111,37 @@ module.exports = React.createClass({
     var classes = new BEMHelper('componentName');
 
     return (
-      <div {...classes()} />
+      <div {...classes('element', 'modifier', 'extra')} />
     );
-    // Returns <div className='componentName'/>
+    // Returns <div className='componentName__element componentName__element--modifier extra'/>
   }
 });
 ```
 
-The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra` classes, although _an object containing any of these parameters is also supported_.
+The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra` classes, although _an object containing any of these parameters is also supported:_
+
+#### Alternate Syntax
+
+```js
+var React     = require('react'),
+    BEMHelper = require('react-bem-helper');
+
+module.exports = React.createClass({
+  render: function() {
+    var classes = new BEMHelper('componentName');
+    var options = {
+      element:   'element',
+      modifiers: 'modifier',
+      extra:     'extra'
+    };
+
+    return (
+      <div {...classes(options)} />
+    );
+    // Returns <div className='componentName__element componentName__element--modifier extra'/>
+  }
+});
+```
 
 #### Element
 To generate a class like `componentName__header`, pass `"header"` as the first argument to the bemHelper:
