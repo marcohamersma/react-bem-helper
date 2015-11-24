@@ -44,12 +44,13 @@ Here's how you would return [the example HTML structure](#why) when using the he
 var React     = require('react');
 var BEMHelper = require('react-bem-helper');
 
+var classes = new BEMHelper({
+  name: 'componentName',
+  prefix: 'c-'
+});
+
 module.exports = React.createClass({
   render: function() {
-    var classes = new BEMHelper({
-      name: 'componentName',
-      prefix: 'c-'
-    });
 
     return (
       <div {...classes()}>
@@ -62,22 +63,6 @@ module.exports = React.createClass({
     );
   }
 });
-```
-
-For optimization reasons, you might want to move `new BEMHelper` out of the render function. On occasions I've done something like this:
-
-```js
-…
-module.exports = React.createClass({
-  bemHelper: new BEMHelper('componentName'),
-  render: function() {
-    var classes = this.bemHelper;
-    return (
-      <div {...classes()}>
-      …
-    )
-  }
-})
 ```
 
 ## Usage
@@ -106,10 +91,10 @@ When executed, the helper returns an object with a `className` property. When th
 var React     = require('react'),
     BEMHelper = require('react-bem-helper');
 
+var classes = new BEMHelper('componentName');
+
 module.exports = React.createClass({
   render: function() {
-    var classes = new BEMHelper('componentName');
-
     return (
       <div {...classes('element', 'modifier', 'extra')} />
     );
@@ -126,9 +111,10 @@ The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra
 var React     = require('react'),
     BEMHelper = require('react-bem-helper');
 
+var classes = new BEMHelper('componentName');
+
 module.exports = React.createClass({
   render: function() {
-    var classes = new BEMHelper('componentName');
     var options = {
       element:   'element',
       modifiers: 'modifier',
@@ -144,7 +130,7 @@ module.exports = React.createClass({
 ```
 
 #### Element
-To generate a class like `componentName__header`, pass `"header"` as the first argument to the bemHelper:
+To generate a class like `componentName__header`, pass `"header"` as the first argument to the bemHelper.
 
 ```js
 var BEMHelper = require('react-bem-helper');
@@ -153,7 +139,7 @@ var bemHelper = new BEMHelper('componentName');
 bemHelper('header'); // returns { className: 'componentName__header' }
 ```
 
-The element argument only supports strings, but a configuration object replacing the element, modifiers and 'extra' paramers can be passed instead:
+You can also pass a configuration object instead of the first parameter:
 
 ```js
 bemHelper({ element: 'header' }); // returns { className: 'componentName__header' }
@@ -166,11 +152,13 @@ Modifiers can be added as a `String`, `Array`, or `Object`. For every modifier a
 var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
-bemHelper(null, 'active');
+bemHelper(null, 'active'); 
+// or
+bemHelper({ modifiers: 'active' });
 // { className: 'componentName--active'}
 
 bemHelper('lol', 'active');
-// { className: 'componentName__lol--active'}
+// { className: 'componentName__lol componentName__lol--active'}
 
 bemHelper('lol', ['active', 'funny']);
 // { className: 'componentName__lol componentName__lol--active componentName__lol--funny'}
@@ -180,17 +168,10 @@ bemHelper('lol', {
   funny: false,
   playing: function() { return false;}
 });
-// { className: 'componentName__lol--active'}
+// { className: 'componentName__lol componentName__lol--active'}
 ```
+
 If you pass an object as the modifiers argument, the helper will add the keys as classes for which their corresponding values are true. If a function is passed as a value, this function is executed.
-
-If you're not using arguments, but a configuration object, add modifiers by adding a `modifier` or `modifiers` property to the configuration object:
-
-```js
-bemHelper({ modifiers: 'active' }); // returns { className: 'componentName--active' }
-```
-
-As when using arguments, this syntax also supports arrays and objects as different ways of defining modifiers.
 
 #### Extra classes
 This argument allows you to do add extra classes to the element. Like the modifiers, extra classes can be added as a `String`, `Array`, or `Object`. The behaviour is the same, except that the classes are added as passed, and no prefix or block name is added.
@@ -200,6 +181,8 @@ var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
 bemHelper('', '', ['one', 'two']);
+// or
+bemHelper({ extra: ['one', 'two'] }); 
 // { className: 'componentName one two'}
 
 bemHelper('', '', {
@@ -210,15 +193,7 @@ bemHelper('', '', {
 // { className: 'componentName active'}
 ```
 
-If you're not using arguments, but a configuration object, add extra classes by adding a `extra` property to the configuration object:
-
-```js
-bemHelper({ extra: ['one', 'two'] }); // { className: 'componentName one two'}
-```
-
 As when using arguments, this syntax also supports arrays and objects as different ways of defining extra classes.
 
 ## License
 MIT License
-
-
