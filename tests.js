@@ -128,6 +128,7 @@ describe('react-bem-helper', function() {
     expect(prefixedBEM('', 'modifier')).toEqual(resultWithClassName('mh-block mh-block--modifier'));
     expect(prefixedBEM('', '', 'class')).toEqual(resultWithClassName('mh-block class'));
   });
+
   it('when underscoreDelimiter option is true, should prefix modifier with _ instead', function() {
     var underscoreBem = new BEMhelper({
       name: 'block',
