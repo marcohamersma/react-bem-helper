@@ -129,12 +129,19 @@ describe('react-bem-helper', function() {
     expect(prefixedBEM('', '', 'class')).toEqual(resultWithClassName('mh-block class'));
   });
 
-  it('when underscoreDelimiter option is true, should prefix modifier with _ instead', function() {
-    var underscoreBem = new BEMhelper({
+  it('when modifierDelimiter option is set, should prefix modifier with that', function() {
+    var modifierBem = new BEMhelper({
       name: 'block',
-      underscoreDelimiter: true
+      modifierDelimiter: '_'
     });
 
-    expect(underscoreBem('', 'modifier')).toEqual(resultWithClassName('block block_modifier'));
+    expect(modifierBem('', 'modifier')).toEqual(resultWithClassName('block block_modifier'));
+
+    var modifierBem = new BEMhelper({
+      name: 'block',
+      modifierDelimiter: '🐘'
+    });
+
+    expect(modifierBem('', 'modifier')).toEqual(resultWithClassName('block block🐘modifier'));
   });
 });

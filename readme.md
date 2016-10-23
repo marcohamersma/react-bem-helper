@@ -82,7 +82,7 @@ var bemHelper = new BEMHelper('componentName')
 var bemHelper2 = new BEMHelper({
   name: 'componentName',
   prefix: 'mh-',
-  underscoreDelimiter: false
+  modifierDelimiter: false
 });
 ```
 
@@ -196,15 +196,15 @@ bemHelper('', '', {
 
 As when using arguments, this syntax also supports arrays and objects as different ways of defining extra classes.
 
-### Default naming scheme
+### Modifier Delimiter / Default BEM naming scheme
 For this project, I've chosen to use the `.block__element--modifier` naming scheme, because this seems to be the most common implementation. However, the official website on BEM [considers this to be an alternative naming scheme](https://en.bem.info/methodology/naming-convention/#modifier-name).
 
-If you like to use the default naming scheme, set the `underscoreDelimiter` option to `true` when creating the bemHelper:
+If you like to use the default naming scheme, you can set the `modifierDelimiter` option to `_` when creating the bemHelper:
 
 ```js
 var classes = new BEMHelper({
   name: 'componentName',
-  underscoreDelimiter: true
+  modifierDelimiter: '_'
 });
 
 …

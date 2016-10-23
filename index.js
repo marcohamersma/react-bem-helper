@@ -52,7 +52,7 @@ module.exports = function(options) {
     var blockName = options.name;
     var rootName = blockName;
     var classNames = [];
-    var modifierSeparator = options.underscoreDelimiter ? '_' : '--';
+    var modifierDelimiter = options.modifierDelimiter || '--';
     var element;
 
     // This means the first parameter is not the element, but a configuration variable
@@ -72,7 +72,7 @@ module.exports = function(options) {
 
     // Compose an array of modifiers
     listToArray(modifiers).forEach(function(modifier) {
-      classNames.push(rootName + modifierSeparator + modifier);
+      classNames.push(rootName + modifierDelimiter + modifier);
     });
 
     // Add a prefix to all the classes in the classNames array
