@@ -3,13 +3,15 @@
   "version": "1.2.0",
   "description": "allows you to easily add BEM-style element and modifier classes to React elements, while hopefully making it easier to scan.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine && tsc"
   },
   "author": "Marco Hamersma",
   "license": "MIT",
   "devDependencies": {
-    "jasmine": "^2.2.1"
+    "jasmine": "^2.2.1",
+    "typescript": "^2.1.6"
   },
   "repository": {
     "type": "git",
