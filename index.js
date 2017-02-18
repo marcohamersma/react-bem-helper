@@ -43,7 +43,7 @@ function listToArray(list) {
   }
 }
 
-module.exports = function(options) {
+function BEMHelper(options) {
   if (isString(options)) {
     options = { name: options };
   }
@@ -91,3 +91,12 @@ module.exports = function(options) {
     };
   };
 };
+
+BEMHelper.block = function(options) {
+  var helper = BEMHelper(options);
+  return function() {
+    return helper.apply(null, arguments).className;
+  };
+};
+
+module.exports = BEMHelper;

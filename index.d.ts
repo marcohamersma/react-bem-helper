@@ -4,10 +4,7 @@
  * Created by Zander Otavka on 2/11/17.
  */
 
-interface BEMHelper {
-    (element?: string, modifiers?: BEMHelper.List, extra?: BEMHelper.List): {className: string};
-    (args: BEMHelper.Arguments): {className: string};
-}
+type BEMHelper = BEMHelper.HelperFunction<BEMHelper.ReturnObject>;
 
 declare namespace BEMHelper {
     interface PredicateList {
@@ -23,6 +20,22 @@ declare namespace BEMHelper {
         extra?: List;
     }
 
+    interface ReturnObject {
+        className: string;
+    }
+
+    interface HelperFunction<T extends (string | ReturnObject)> {
+        (element?: string, modifiers?: List, extra?: List): T;
+        (args: Arguments): T;
+    }
+
+    type Block = HelperFunction<string>;
+
+    interface BlockConstructor {
+        (name: string): Block;
+        (options: ConstructorOptions): Block;
+    }
+
     interface ConstructorOptions {
         name: string;
         prefix?: string;
@@ -34,9 +47,10 @@ declare namespace BEMHelper {
         new(options: ConstructorOptions): BEMHelper;
         (name: string): BEMHelper;
         (options: ConstructorOptions): BEMHelper;
+
+        block: BlockConstructor;
     }
 }
-
 
 declare var BEMHelper: BEMHelper.Constructor;
 export = BEMHelper;
