@@ -97,12 +97,14 @@ function createSuite(Helper, helperResult) {
           'two': true,
           'three': false,
           'four': function() { return false; },
-          'five': function() { return true; }
+          'five': function() { return true; },
+          'six seven': true
         };
 
-        expect(bemhelper('', modifiers)).toEqual(helperResult('block block--two block--five'));
-        expect(bemhelper(null, modifiers)).toEqual(helperResult('block block--two block--five'));
-        expect(bemhelper({ modifiers: modifiers })).toEqual(helperResult('block block--two block--five'));
+        var result = 'block block--two block--five block--six block--seven';
+        expect(bemhelper('', modifiers)).toEqual(helperResult(result));
+        expect(bemhelper(null, modifiers)).toEqual(helperResult(result));
+        expect(bemhelper({ modifiers: modifiers })).toEqual(helperResult(result));
       });
     });
 
@@ -118,11 +120,12 @@ function createSuite(Helper, helperResult) {
       var extraClasses = {
         'one': false,
         'two': true,
-        'three': false
+        'three': false,
+        'four five': true
       };
 
-      expect(bemhelper('', '', extraClasses)).toEqual(helperResult('block two'));
-      expect(bemhelper({ extra: extraClasses })).toEqual(helperResult('block two'));
+      expect(bemhelper('', '', extraClasses)).toEqual(helperResult('block two four five'));
+      expect(bemhelper({ extra: extraClasses })).toEqual(helperResult('block two four five'));
     });
 
     it('when given a prefix, should append generated BEM classes with that', function() {

@@ -12,6 +12,10 @@ function isFunction(functionToCheck) {
   return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
 
+function stringToArray(string) {
+  return string.split(/\s+/g).filter(function(c) {return c.length !== 0});
+}
+
 function objectToArray(object) {
   var keys   = Object.keys(object);
   var output = [];
@@ -24,7 +28,7 @@ function objectToArray(object) {
     }
 
     if (predicate) {
-      output.push(key);
+      Array.prototype.push.apply(output, stringToArray(key));
     }
   });
 
@@ -33,7 +37,7 @@ function objectToArray(object) {
 
 function listToArray(list) {
   if (isString(list) && list !== '') {
-    return list.split(' ');
+    return stringToArray(list);
   } else if (list && list.length) {
     return list;
   } else if (isObject(list)) {
