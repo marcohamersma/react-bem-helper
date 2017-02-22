@@ -4,38 +4,39 @@
  * Created by Zander Otavka on 2/11/17.
  */
 
-declare module Bem {
+interface BEMHelper {
+    (element?: string, modifiers?: BEMHelper.List, extra?: BEMHelper.List): {className: string};
+    (args: BEMHelper.Arguments): {className: string};
+}
+
+declare namespace BEMHelper {
     interface PredicateList {
         [key: string]: boolean | (() => boolean);
     }
 
     type List = string | string[] | PredicateList;
 
-    interface HelperArguments {
+    interface Arguments {
         element?: string;
         modifier?: List;
         modifiers?: List;
         extra?: List;
     }
 
-    interface Helper {
-        (element?: string, modifiers?: List, extra?: List): {className: string};
-        (args: HelperArguments): {className: string};
-    }
-
-    interface HelperConstructorOptions {
+    interface ConstructorOptions {
         name: string;
         prefix?: string;
         modifierDelimiter?: string;
     }
 
-    interface HelperConstructor {
-        new(name: string): Helper;
-        new(options: HelperConstructorOptions): Helper;
-        (name: string): Helper;
-        (options: HelperConstructorOptions): Helper;
+    interface Constructor {
+        new(name: string): BEMHelper;
+        new(options: ConstructorOptions): BEMHelper;
+        (name: string): BEMHelper;
+        (options: ConstructorOptions): BEMHelper;
     }
 }
 
-declare var BEMHelper: Bem.HelperConstructor;
+
+declare var BEMHelper: BEMHelper.Constructor;
 export = BEMHelper;
