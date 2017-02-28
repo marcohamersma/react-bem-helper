@@ -163,6 +163,6 @@ describe('react-bem-helper', function() {
     var bem = new BEMHelper('block');
 
     expect(bem.modifiers('element')).toEqual(resultWithClassName(''));
-    expect(bem.modifiers('element', 'modifier').toEqual(resultWithClassName('block__element--modifier')))
+    expect(bem.modifiers('element', 'modifier')).toEqual(resultWithClassName('block__element--modifier'))
   });
 });
