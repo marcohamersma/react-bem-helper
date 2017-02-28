@@ -83,7 +83,7 @@ function BEMHelper(options) {
     });
   }
 
-  function getFullClassName(first, modifiers, extraClassNames) {
+  function getFullClasses(first, modifiers, extraClassNames) {
     // This means the first parameter is not the element, but a configuration variable
     if (isObject(first)) {
       extraClassNames = first.extra;
@@ -105,13 +105,17 @@ function BEMHelper(options) {
     }
   }
 
-  function getModifiersClassName(first, modifiers) {
-    return getModifierArray(first, modifiers).join(' ').trim();
+  function getModifierClasses(first, modifiers) {
+    var modifierString = getModifierArray(first, modifiers).join(' ').trim();
+    if (outputIsString) {
+      return modifierString;
+    } else {
+      return { className: modifierString };
+    }
   }
 
-  getFullClassName.modifiers = getModifiersClassName;
-
-  return getFullClassName;
+  getFullClasses.modifiers = getModifierClasses;
+  return getFullClasses;
 }
 
 module.exports = BEMHelper;
