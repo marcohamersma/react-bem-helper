@@ -4,7 +4,8 @@
  * Created by Zander Otavka on 2/11/17.
  */
 
-type BEMHelper = BEMHelper.HelperFunction<BEMHelper.ReturnObject>;
+interface BEMHelper<TReturn extends (string | BEMHelper.ReturnObject)> extends
+    BEMHelper.HelperFunction<TReturn> {}
 
 declare namespace BEMHelper {
     interface PredicateList {
@@ -13,10 +14,13 @@ declare namespace BEMHelper {
 
     type List = string | string[] | PredicateList;
 
-    interface Arguments {
+    interface ModifierArguments {
         element?: string;
         modifier?: List;
         modifiers?: List;
+    }
+
+    interface HelperArguments extends ModifierArguments {
         extra?: List;
     }
 
@@ -24,33 +28,46 @@ declare namespace BEMHelper {
         className: string;
     }
 
-    interface HelperFunction<T extends (string | ReturnObject)> {
-        (element?: string, modifiers?: List, extra?: List): T;
-        (args: Arguments): T;
+    interface HelperFunction<TReturn extends (string | ReturnObject)> {
+        (element?: string, modifiers?: List, extra?: List): TReturn;
+        (args: HelperArguments): TReturn;
+
+        modifiers(element?: string, modifiers?: List): TReturn;
+        modifiers(args: ModifierArguments): TReturn;
     }
 
-    type Block = HelperFunction<string>;
-
-    interface BlockConstructor {
-        (name: string): Block;
-        (options: ConstructorOptions): Block;
-    }
-
-    interface ConstructorOptions {
+    interface BaseConstructorOptions {
         name: string;
         prefix?: string;
         modifierDelimiter?: string;
     }
 
-    interface Constructor {
-        new(name: string): BEMHelper;
-        new(options: ConstructorOptions): BEMHelper;
-        (name: string): BEMHelper;
-        (options: ConstructorOptions): BEMHelper;
+    interface StringConstructorOptions extends BaseConstructorOptions {
+        outputIsString: true;
+    }
 
-        block: BlockConstructor;
+    interface ObjectConstructorOptions extends BaseConstructorOptions {
+        outputIsString: false;
+    }
+
+    type ConstructorOptions = StringConstructorOptions | ObjectConstructorOptions;
+
+    interface Constructor<TDefaultReturn extends (string | ReturnObject)> {
+        new(name: string): BEMHelper<TDefaultReturn>;
+        new(options: BaseConstructorOptions): BEMHelper<TDefaultReturn>;
+        new(options: StringConstructorOptions): BEMHelper<string>;
+        new(options: ObjectConstructorOptions): BEMHelper<ReturnObject>;
+        (name: string): BEMHelper<TDefaultReturn>;
+        (options: BaseConstructorOptions): BEMHelper<TDefaultReturn>;
+        (options: StringConstructorOptions): BEMHelper<string>;
+        (options: ObjectConstructorOptions): BEMHelper<ReturnObject>;
+    }
+
+    interface RootConstructor extends Constructor<ReturnObject> {
+        withDefaults(defaults: Partial<StringConstructorOptions>): Constructor<string>;
+        withDefaults(defaults: Partial<ObjectConstructorOptions>): Constructor<ReturnObject>;
     }
 }
 
-declare var BEMHelper: BEMHelper.Constructor;
+declare var BEMHelper: BEMHelper.RootConstructor;
 export = BEMHelper;
