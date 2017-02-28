@@ -1,3 +1,7 @@
+function pushArray(array, newElements) {
+  Array.prototype.push.apply(array, newElements);
+}
+
 function isObject(obj) {
   var type = typeof obj;
   return type === 'function' || type === 'object' && !!obj;
@@ -28,7 +32,7 @@ function objectToArray(object) {
     }
 
     if (predicate) {
-      Array.prototype.push.apply(output, stringToArray(key));
+      pushArray(output, stringToArray(key));
     }
   });
 
@@ -52,55 +56,62 @@ function BEMHelper(options) {
     options = { name: options };
   }
 
-  return function(first, modifiers, extraClassNames) {
-    var blockName = options.name;
-    var rootName = blockName;
-    var classNames = [];
-    var modifierDelimiter = options.modifierDelimiter || '--';
-    var element;
+  var blockName         = (options.prefix || '') + options.name;
+  var modifierDelimiter = options.modifierDelimiter || '--';
+  var outputIsString    = options.outputIsString || false;
 
+  // Either block or block__element
+  function getRootName(first) {
+    var element = isObject(first) ? first.element : first;
+    if (element) {
+      return blockName + '__' + element;
+    } else {
+      return blockName;
+    }
+  }
+
+  // Compose an array of modifiers
+  function getModifierArray(first, modifiers) {
+    var rootName = getRootName(first);
+
+    if (isObject(first)) {
+      modifiers = first.modifiers || first.modifier;
+    }
+
+    return listToArray(modifiers).map(function(modifier) {
+      return rootName + modifierDelimiter + modifier;
+    });
+  }
+
+  function getFullClassName(first, modifiers, extraClassNames) {
     // This means the first parameter is not the element, but a configuration variable
     if (isObject(first)) {
-      element = first.element;
-      modifiers = first.modifiers || first.modifier;
       extraClassNames = first.extra;
+    }
+
+    // Always include the root name first
+    var classNames = [getRootName(first)];
+
+    // Push on modifiers list and extraClassNames list
+    pushArray(classNames, getModifierArray(first, modifiers));
+    pushArray(classNames, listToArray(extraClassNames));
+
+    var classNameString = classNames.join(' ').trim();
+
+    if (outputIsString) {
+      return classNameString;
     } else {
-      element = first;
+      return { className: classNameString };
     }
+  }
 
-    if (element) {
-      rootName += '__' + element;
-    }
+  function getModifiersClassName(first, modifiers) {
+    return getModifierArray(first, modifiers).join(' ').trim();
+  }
 
-    classNames.push(rootName);
+  getFullClassName.modifiers = getModifiersClassName;
 
-    // Compose an array of modifiers
-    listToArray(modifiers).forEach(function(modifier) {
-      classNames.push(rootName + modifierDelimiter + modifier);
-    });
-
-    // Add a prefix to all the classes in the classNames array
-    if (options.prefix) {
-      for (var i = 0; i < classNames.length; i++) {
-        classNames[i] = options.prefix + classNames[i];
-      }
-    }
-    // Compose an array of extraClassNames
-    listToArray(extraClassNames).forEach(function(extraClassName) {
-      classNames.push(extraClassName);
-    });
-
-    return {
-      className: classNames.join(' ').trim()
-    };
-  };
-};
-
-BEMHelper.block = function(options) {
-  var helper = BEMHelper(options);
-  return function() {
-    return helper.apply(null, arguments).className;
-  };
-};
+  return getFullClassName;
+}
 
 module.exports = BEMHelper;
