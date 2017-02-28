@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/marcohamersma/react-bem-helper/issues"
   },
-  "homepage": "https://github.com/marcohamersma/react-bem-helper"
+  "homepage": "https://github.com/marcohamersma/react-bem-helper",
+  "dependencies": {
+    "object-assign": "^4.1.1"
+  }
 }

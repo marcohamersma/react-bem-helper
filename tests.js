@@ -16,15 +16,8 @@ describe('react-bem-helper', function() {
       prefix: ''
     });
 
-    var bemhelperWithoutPrefix2 = new BEMHelper({
-      name: 'block',
-      prefix: null
-    });
-
     expect(bemhelper('')).toEqual(resultWithClassName('block'));
     expect(bemhelper()).toEqual(resultWithClassName('block'));
-    expect(bemhelperWithoutPrefix('')).toEqual(resultWithClassName('block'));
-    expect(bemhelperWithoutPrefix2('')).toEqual(resultWithClassName('block'));
   });
 
   it('should return classNames for the block and modifier when modifier given', function() {
