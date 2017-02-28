@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "jasmine && tsc"
+    "test": "jasmine && tsc && echo 'TypeScript declarations compiled successfully.\n'"
   },
   "author": "Marco Hamersma",
   "license": "MIT",
