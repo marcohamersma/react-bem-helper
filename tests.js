@@ -158,4 +158,36 @@ describe('react-bem-helper', function() {
     expect(bem.modifiers('element')).toEqual(resultWithClassName(''));
     expect(bem.modifiers('element', 'modifier')).toEqual(resultWithClassName('block__element--modifier'))
   });
+
+  describe('when using withDefaults', function() {
+    var HelperWithDefaults = BEMHelper.withDefaults({
+      prefix: 'pfx-',
+      modifierDelimiter: '_',
+      outputIsString: true
+    });
+
+    it('should apply the defaults', function() {
+      var bem1 = new HelperWithDefaults('block')
+      var bem2 = new HelperWithDefaults({
+        name: 'block'
+      });
+
+      expect(bem1('element', 'modifier')).toBe('pfx-block__element pfx-block__element_modifier');
+      expect(bem2('element', 'modifier')).toBe('pfx-block__element pfx-block__element_modifier');
+      expect(bem1.modifiers('element', 'modifier')).toBe('pfx-block__element_modifier');
+      expect(bem2.modifiers('element', 'modifier')).toBe('pfx-block__element_modifier');
+    });
+
+    it('should be able to override the defaults', function() {
+      var bem = new HelperWithDefaults({
+        name: 'block',
+        prefix: '',
+        modifierDelimiter: '@',
+        outputIsString: false
+      });
+
+      expect(bem('element', 'modifier')).toEqual(resultWithClassName('block__element block__element@modifier'));
+      expect(bem.modifiers('element', 'modifier')).toEqual(resultWithClassName('block__element@modifier'));
+    });
+  });
 });
