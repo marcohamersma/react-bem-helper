@@ -153,7 +153,7 @@ Modifiers can be added as a `String`, `Array`, or `Object`. For every modifier a
 var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
-bemHelper(null, 'active'); 
+bemHelper(null, 'active');
 // or
 bemHelper({ modifiers: 'active' });
 // { className: 'componentName--active'}
@@ -183,7 +183,7 @@ var bemHelper = new BEMHelper('componentName');
 
 bemHelper('', '', ['one', 'two']);
 // or
-bemHelper({ extra: ['one', 'two'] }); 
+bemHelper({ extra: ['one', 'two'] });
 // { className: 'componentName one two'}
 
 bemHelper('', '', {
@@ -218,6 +218,12 @@ module.exports = React.createClass({
   }
 });
 ```
+
+## Related projects
+* [bem-classnames](https://github.com/pocotan001/bem-classnames)
+* [react-bem](https://github.com/cuzzo/react-bem)
+* [bem-cn](https://github.com/albburtsev/bem-cn)
+* [b_](https://github.com/azproduction/b_)
 
 ## License
 MIT License
