@@ -118,7 +118,20 @@ function withDefaults(defaults) {
       }
     }
 
-    function getModifierClasses(first, modifiers) {
+    function getElementClassName(first) {
+      var element;
+
+      // This means the first parameter is not the element, but a configuration variable
+      if (isObject(first)) {
+        element = first.element;
+      } else {
+        element = first;
+      }
+
+      return getRootName(blockName, element);
+    }
+
+    function getModifiersClassName(first, modifiers) {
       var element;
 
       // This means the first parameter is not the element, but a configuration variable
@@ -129,18 +142,11 @@ function withDefaults(defaults) {
         element = first;
       }
 
-      var modifierString = getModifierArray(blockName, element, modifiers, modifierDelimiter)
-        .join(' ')
-        .trim();
-
-      if (outputIsString) {
-        return modifierString;
-      } else {
-        return { className: modifierString };
-      }
+      return getModifierArray(blockName, element, modifiers, modifierDelimiter).join(' ').trim();
     }
 
-    getFullClasses.modifiers = getModifierClasses;
+    getFullClasses.element = getElementClassName;
+    getFullClasses.modifiers = getModifiersClassName;
     return getFullClasses;
   };
 }

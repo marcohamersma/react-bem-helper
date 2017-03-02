@@ -14,8 +14,11 @@ declare namespace BEMHelper {
 
     type List = string | string[] | PredicateList;
 
-    interface ModifierArguments {
+    interface ElementArguments {
         element?: string;
+    }
+
+    interface ModifierArguments extends ElementArguments {
         modifier?: List;
         modifiers?: List;
     }
@@ -32,8 +35,10 @@ declare namespace BEMHelper {
         (element?: string, modifiers?: List, extra?: List): TReturn;
         (args: HelperArguments): TReturn;
 
-        modifiers(element?: string, modifiers?: List): TReturn;
-        modifiers(args: ModifierArguments): TReturn;
+        element(element?: string): string;
+        element(args: ElementArguments): string;
+        modifiers(element: string, modifiers: List): string;
+        modifiers(args: ModifierArguments): string;
     }
 
     interface BaseConstructorOptions {
