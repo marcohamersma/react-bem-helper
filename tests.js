@@ -152,20 +152,6 @@ describe('react-bem-helper', function() {
     expect(stringBem('element', 'modifier')).toBe('block__element block__element--modifier');
   });
 
-  it('should just return a string of the rootname when calling bem.element()', function() {
-    var bem = new BEMHelper('block');
-
-    expect(bem.element()).toBe('block');
-    expect(bem.element('element')).toBe('block__element');
-  });
-
-  it('should return a string excluding the rootname when calling bem.modifiers()', function() {
-    var bem = new BEMHelper('block');
-
-    expect(bem.modifiers({element: 'element', modifier: 'modifier'})).toBe('block__element--modifier');
-    expect(bem.modifiers('element', 'modifier')).toBe('block__element--modifier');
-  });
-
   describe('when using withDefaults', function() {
     var HelperWithDefaults = BEMHelper.withDefaults({
       prefix: 'pfx-',

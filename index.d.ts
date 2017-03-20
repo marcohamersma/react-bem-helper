@@ -34,11 +34,6 @@ declare namespace BEMHelper {
     interface HelperFunction<TReturn extends (string | ReturnObject)> {
         (element?: string, modifiers?: List, extra?: List): TReturn;
         (args: HelperArguments): TReturn;
-
-        element(element?: string): string;
-        element(args: ElementArguments): string;
-        modifiers(element: string, modifiers: List): string;
-        modifiers(args: ModifierArguments): string;
     }
 
     interface BaseConstructorOptions {

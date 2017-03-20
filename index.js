@@ -6,16 +6,15 @@ function pushArray(array, newElements) {
 
 function isObject(obj) {
   var type = typeof obj;
-  return type === 'function' || type === 'object' && !!obj;
+  return type === 'function' || (type === 'object' && !!obj);
 }
 
 function isString(string) {
   return typeof string === 'string';
 }
 
-function isFunction(functionToCheck) {
-  var getType = {};
-  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+function isFunction(func) {
+  return typeof func === 'function';
 }
 
 function stringToArray(string) {
@@ -53,24 +52,6 @@ function listToArray(list) {
   }
 }
 
-// Either block or block__element
-function getRootName(blockName, element) {
-  if (element) {
-    return blockName + '__' + element;
-  } else {
-    return blockName;
-  }
-}
-
-// Compose an array of modifiers
-function getModifierArray(blockName, element, modifiers, modifierDelimiter) {
-  var rootName = getRootName(blockName, element);
-
-  return listToArray(modifiers).map(function(modifier) {
-    return rootName + modifierDelimiter + modifier;
-  });
-}
-
 function withDefaults(defaults) {
   return function(options) {
     if (isString(options)) {
@@ -90,7 +71,7 @@ function withDefaults(defaults) {
     var modifierDelimiter = options.modifierDelimiter;
     var outputIsString    = options.outputIsString;
 
-    function getFullClasses(first, modifiers, extraClassNames) {
+    return function(first, modifiers, extraClassNames) {
       var element;
 
       // This means the first parameter is not the element, but a configuration variable
@@ -102,11 +83,20 @@ function withDefaults(defaults) {
         element = first;
       }
 
+      var rootName;
+      if (element) {
+        rootName = blockName + '__' + element;
+      } else {
+        rootName = blockName;
+      }
+
       // Always include the root name first
-      var classNames = [getRootName(blockName, element)];
+      var classNames = [rootName];
 
       // Push on modifiers list and extraClassNames list
-      pushArray(classNames, getModifierArray(blockName, element, modifiers, modifierDelimiter));
+      pushArray(classNames, listToArray(modifiers).map(function(modifier) {
+        return rootName + modifierDelimiter + modifier;
+      }));
       pushArray(classNames, listToArray(extraClassNames));
 
       var classNameString = classNames.join(' ').trim();
@@ -116,38 +106,7 @@ function withDefaults(defaults) {
       } else {
         return { className: classNameString };
       }
-    }
-
-    function getElementClassName(first) {
-      var element;
-
-      // This means the first parameter is not the element, but a configuration variable
-      if (isObject(first)) {
-        element = first.element;
-      } else {
-        element = first;
-      }
-
-      return getRootName(blockName, element);
-    }
-
-    function getModifiersClassName(first, modifiers) {
-      var element;
-
-      // This means the first parameter is not the element, but a configuration variable
-      if (isObject(first)) {
-        element = first.element;
-        modifiers = first.modifiers || first.modifier;
-      } else {
-        element = first;
-      }
-
-      return getModifierArray(blockName, element, modifiers, modifierDelimiter).join(' ').trim();
-    }
-
-    getFullClasses.element = getElementClassName;
-    getFullClasses.modifiers = getModifiersClassName;
-    return getFullClasses;
+    };
   };
 }
 

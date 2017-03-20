@@ -78,25 +78,3 @@ string = stringHelper({
     element: "foo",
 });
 string = stringHelper({});
-
-string = objectHelper.element();
-string = objectHelper.element("foo");
-string = objectHelper.element({
-    element: "foo"
-});
-string = objectHelper.modifiers("foo");
-string = objectHelper.modifiers({
-    element: "foo",
-    modifiers: "bar"
-});
-
-string = stringHelper.element();
-string = stringHelper.element("foo");
-string = stringHelper.element({
-    element: "foo"
-});
-string = stringHelper.modifiers("foo");
-string = stringHelper.modifiers({
-    element: "foo"
-});
-
