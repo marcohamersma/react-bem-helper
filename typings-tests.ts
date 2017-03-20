@@ -1,5 +1,5 @@
 /**
- * @file react-bem-helper/test.d.ts
+ * @file react-bem-helper/typings-tests.ts
  *
  * Created by Zander Otavka on 2/11/17.
  */
