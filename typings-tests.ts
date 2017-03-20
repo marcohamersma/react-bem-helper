@@ -1,3 +1,9 @@
+/**
+ * @file react-bem-helper/test.d.ts
+ *
+ * Created by Zander Otavka on 2/11/17.
+ */
+
 import * as BEMHelper from "./index";
 
 let BEMStringHelper: BEMHelper.Constructor<string> = BEMHelper.withDefaults({
