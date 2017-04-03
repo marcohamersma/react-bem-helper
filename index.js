@@ -44,7 +44,9 @@ function listToArray(list) {
   if (isString(list) && list !== '') {
     return stringToArray(list);
   } else if (list && list.length) {
-    return list;
+    return list.reduce(function (array, string) {
+      return array.concat(stringToArray(string));
+    }, []);
   } else if (isObject(list)) {
     return objectToArray(list);
   } else {

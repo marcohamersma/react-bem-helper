@@ -72,8 +72,8 @@ describe('react-bem-helper', function() {
 
   describe(', when given multiple modifiers', function() {
     it('as an array, should return classNames for the element and each modifier given', function() {
-      var modifiers = ['one', 'two'];
-      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two'));
+      var modifiers = ['one', 'two three'];
+      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two block--three'));
     });
 
     it('as an object, should return classNames for the element and each modifier that is truthy', function() {
