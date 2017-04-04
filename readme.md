@@ -90,12 +90,12 @@ var bemHelper2 = new BEMHelper({
 Options can be shared throughout a project by using [withDefaults()](#withdefaults).
 
 #### Options
-| Name                | Type      | Required | Description                                         |
+| Name                | Type      | Default  | Description                                         |
 |---------------------|-----------|----------|-----------------------------------------------------|
-| `name`              | `string`  | Yes      | The name of the BEM block.                          |
-| `prefix`            | `string`  | No       | A prefix for the block name.                        |
-| `modifierDelimiter` | `string`  | No       | The separator between element name and modifier name.|
-| `outputIsString`    | `boolean` | No       | Whether to return an object or a plain string from the helper.|
+| `name`              | `string`  | Required | The name of the BEM block.                          |
+| `prefix`            | `string`  | `''`     | A prefix for the block name.                        |
+| `modifierDelimiter` | `string`  | `'--'`   | The separator between element name and modifier name.|
+| `outputIsString`    | `boolean` | `false`  | Whether to return an object or a plain string from the helper.|
 
 ### Using the helper
 When executed, the helper returns an object with a `className` property. When the helper is called without any arguments, its value will consist of the block name (prefixed if applicable)
