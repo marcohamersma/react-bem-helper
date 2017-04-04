@@ -1,15 +1,24 @@
+var assign = require('object-assign');
+
+function pushArray(array, newElements) {
+  Array.prototype.push.apply(array, newElements);
+}
+
 function isObject(obj) {
   var type = typeof obj;
-  return type === 'function' || type === 'object' && !!obj;
+  return type === 'function' || (type === 'object' && !!obj);
 }
 
 function isString(string) {
   return typeof string === 'string';
 }
 
-function isFunction(functionToCheck) {
-  var getType = {};
-  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+function isFunction(func) {
+  return typeof func === 'function';
+}
+
+function stringToArray(string) {
+  return string.split(/\s+/g).filter(function(c) {return c.length !== 0});
 }
 
 function objectToArray(object) {
@@ -24,7 +33,7 @@ function objectToArray(object) {
     }
 
     if (predicate) {
-      output.push(key);
+      pushArray(output, stringToArray(key));
     }
   });
 
@@ -33,9 +42,11 @@ function objectToArray(object) {
 
 function listToArray(list) {
   if (isString(list) && list !== '') {
-    return list.split(' ');
+    return stringToArray(list);
   } else if (list && list.length) {
-    return list;
+    return list.reduce(function (array, string) {
+      return array.concat(stringToArray(string));
+    }, []);
   } else if (isObject(list)) {
     return objectToArray(list);
   } else {
@@ -43,51 +54,65 @@ function listToArray(list) {
   }
 }
 
-module.exports = function(options) {
-  if (isString(options)) {
-    options = { name: options };
-  }
-
-  return function(first, modifiers, extraClassNames) {
-    var blockName = options.name;
-    var rootName = blockName;
-    var classNames = [];
-    var modifierDelimiter = options.modifierDelimiter || '--';
-    var element;
-
-    // This means the first parameter is not the element, but a configuration variable
-    if (isObject(first)) {
-      element = first.element;
-      modifiers = first.modifiers || first.modifier;
-      extraClassNames = first.extra;
-    } else {
-      element = first;
+function withDefaults(defaults) {
+  return function(options) {
+    if (isString(options)) {
+      options = { name: options };
     }
 
-    if (element) {
-      rootName += '__' + element;
-    }
+    var rootDefaults = {
+      prefix: '',
+      modifierDelimiter: '--',
+      outputIsString: false,
+    };
 
-    classNames.push(rootName);
+    // Copy options on top of defaults
+    options = assign(rootDefaults, defaults, options);
 
-    // Compose an array of modifiers
-    listToArray(modifiers).forEach(function(modifier) {
-      classNames.push(rootName + modifierDelimiter + modifier);
-    });
+    var blockName         = options.prefix + options.name;
+    var modifierDelimiter = options.modifierDelimiter;
+    var outputIsString    = options.outputIsString;
 
-    // Add a prefix to all the classes in the classNames array
-    if (options.prefix) {
-      for (var i = 0; i < classNames.length; i++) {
-        classNames[i] = options.prefix + classNames[i];
+    return function(first, modifiers, extraClassNames) {
+      var element;
+
+      // This means the first parameter is not the element, but a configuration variable
+      if (isObject(first)) {
+        element = first.element;
+        modifiers = first.modifiers || first.modifier;
+        extraClassNames = first.extra;
+      } else {
+        element = first;
       }
-    }
-    // Compose an array of extraClassNames
-    listToArray(extraClassNames).forEach(function(extraClassName) {
-      classNames.push(extraClassName);
-    });
 
-    return {
-      className: classNames.join(' ').trim()
+      var rootName;
+      if (element) {
+        rootName = blockName + '__' + element;
+      } else {
+        rootName = blockName;
+      }
+
+      // Always include the root name first
+      var classNames = [rootName];
+
+      // Push on modifiers list and extraClassNames list
+      pushArray(classNames, listToArray(modifiers).map(function(modifier) {
+        return rootName + modifierDelimiter + modifier;
+      }));
+      pushArray(classNames, listToArray(extraClassNames));
+
+      var classNameString = classNames.join(' ').trim();
+
+      if (outputIsString) {
+        return classNameString;
+      } else {
+        return { className: classNameString };
+      }
     };
   };
-};
+}
+
+var BEMHelper = withDefaults({});
+
+BEMHelper.withDefaults = withDefaults;
+module.exports = BEMHelper;

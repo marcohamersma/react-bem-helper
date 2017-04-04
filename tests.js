@@ -1,5 +1,5 @@
 /*global it, describe, expect */
-var BEMhelper = require('./index');
+var BEMHelper = require('./index');
 
 function resultWithClassName(className) {
   return {
@@ -8,23 +8,16 @@ function resultWithClassName(className) {
 }
 
 describe('react-bem-helper', function() {
-  var bemhelper = new BEMhelper('block');
+  var bemhelper = new BEMHelper('block');
 
   it('should return className for the block when no arguments given', function() {
-    var bemhelperWithoutPrefix = new BEMhelper({
+    var bemhelperWithoutPrefix = new BEMHelper({
       name: 'block',
       prefix: ''
     });
 
-    var bemhelperWithoutPrefix2 = new BEMhelper({
-      name: 'block',
-      prefix: null
-    });
-
     expect(bemhelper('')).toEqual(resultWithClassName('block'));
     expect(bemhelper()).toEqual(resultWithClassName('block'));
-    expect(bemhelperWithoutPrefix('')).toEqual(resultWithClassName('block'));
-    expect(bemhelperWithoutPrefix2('')).toEqual(resultWithClassName('block'));
   });
 
   it('should return classNames for the block and modifier when modifier given', function() {
@@ -79,8 +72,8 @@ describe('react-bem-helper', function() {
 
   describe(', when given multiple modifiers', function() {
     it('as an array, should return classNames for the element and each modifier given', function() {
-      var modifiers = ['one', 'two'];
-      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two'));
+      var modifiers = ['one', 'two three'];
+      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two block--three'));
     });
 
     it('as an object, should return classNames for the element and each modifier that is truthy', function() {
@@ -89,12 +82,14 @@ describe('react-bem-helper', function() {
         'two': true,
         'three': false,
         'four': function() { return false; },
-        'five': function() { return true; }
+        'five': function() { return true; },
+        'six seven': true
       };
 
-      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--two block--five'));
-      expect(bemhelper(null, modifiers)).toEqual(resultWithClassName('block block--two block--five'));
-      expect(bemhelper({ modifiers: modifiers })).toEqual(resultWithClassName('block block--two block--five'));
+      var result = 'block block--two block--five block--six block--seven';
+      expect(bemhelper('', modifiers)).toEqual(resultWithClassName(result));
+      expect(bemhelper(null, modifiers)).toEqual(resultWithClassName(result));
+      expect(bemhelper({ modifiers: modifiers })).toEqual(resultWithClassName(result));
     });
   });
 
@@ -110,15 +105,16 @@ describe('react-bem-helper', function() {
     var extraClasses = {
       'one': false,
       'two': true,
-      'three': false
+      'three': false,
+      'four five': true
     };
 
-    expect(bemhelper('', '', extraClasses)).toEqual(resultWithClassName('block two'));
-    expect(bemhelper({ extra: extraClasses })).toEqual(resultWithClassName('block two'));
+    expect(bemhelper('', '', extraClasses)).toEqual(resultWithClassName('block two four five'));
+    expect(bemhelper({ extra: extraClasses })).toEqual(resultWithClassName('block two four five'));
   });
 
   it('when given a prefix, should append generated BEM classes with that', function() {
-    var prefixedBEM = new BEMhelper({
+    var prefixedBEM = new BEMHelper({
       name: 'block',
       prefix: 'mh-'
     });
@@ -130,18 +126,58 @@ describe('react-bem-helper', function() {
   });
 
   it('when modifierDelimiter option is set, should prefix modifier with that', function() {
-    var modifierBem = new BEMhelper({
+    var modifierBem = new BEMHelper({
       name: 'block',
       modifierDelimiter: '_'
     });
 
     expect(modifierBem('', 'modifier')).toEqual(resultWithClassName('block block_modifier'));
 
-    var modifierBem = new BEMhelper({
+    var modifierBem = new BEMHelper({
       name: 'block',
       modifierDelimiter: '🐘'
     });
 
     expect(modifierBem('', 'modifier')).toEqual(resultWithClassName('block block🐘modifier'));
+  });
+
+  it('should return a string instead of an object when outputIsString is set true', function() {
+    var stringBem = new BEMHelper({
+      name: 'block',
+      outputIsString: true
+    });
+
+    expect(stringBem('')).toBe('block');
+    expect(stringBem('element')).toBe('block__element');
+    expect(stringBem('element', 'modifier')).toBe('block__element block__element--modifier');
+  });
+
+  describe('when using withDefaults', function() {
+    var HelperWithDefaults = BEMHelper.withDefaults({
+      prefix: 'pfx-',
+      modifierDelimiter: '_',
+      outputIsString: true
+    });
+
+    it('should apply the defaults', function() {
+      var bem1 = new HelperWithDefaults('block')
+      var bem2 = new HelperWithDefaults({
+        name: 'block'
+      });
+
+      expect(bem1('element', 'modifier')).toBe('pfx-block__element pfx-block__element_modifier');
+      expect(bem2('element', 'modifier')).toBe('pfx-block__element pfx-block__element_modifier');
+    });
+
+    it('should be able to override the defaults', function() {
+      var bem = new HelperWithDefaults({
+        name: 'block',
+        prefix: '',
+        modifierDelimiter: '@',
+        outputIsString: false
+      });
+
+      expect(bem('element', 'modifier')).toEqual(resultWithClassName('block__element block__element@modifier'));
+    });
   });
 });
