@@ -33,9 +33,9 @@ Compare that to SCSS, where you might write components something like this:
 `react-bem-helper` allows you to write in a similar-ish DRY fashion, taking away some of the repetition and hopefully making it easier to scan.
 
 ## How does it work?
-A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'componentName' }`. If you want, a prefix like `c-` can be automatically added by supplying an [options object](#preparing-the-helper).  It can also return a plain string containing the classname when the `outputIsString` option is set true.
+A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the React element: ` { classNames: 'componentName' }`. You can use the spread operator (`{...object}`) to apply this object to the React element.
 
-You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
+You can supply an [options object](#preparing-the-helper) to change the helper's behaviour. For example, you can set the `outputIsString` option to `true`, and receive a plain string for the classname. A className prefix (like `c-`) option can be added as well.
 
 ## Example
 Here's how you would return [the example HTML structure](#why) when using the helper.
@@ -81,12 +81,13 @@ var bemHelper = new BEMHelper('componentName')
 // Or pass an options object with a prefix to be applied to all components and output set to return
 // a string instead of an object
 var bemHelper2 = new BEMHelper({
-  name: 'componentName',
+  name: 'componentName', // required
   prefix: 'mh-',
   modifierDelimiter: false,
-  outputIsString: true
+  outputIsString: false
 });
 ```
+Options can be shared throughout a project by using [withDefaults()](#withdefaults)
 
 ### Using the helper
 When executed, the helper returns an object with a `className` property. When the helper is called without any arguments, its value will consist of the block name and a prefix:
