@@ -5,7 +5,7 @@ A helper making it easier to name React.js components according to [BEM conventi
 
 ## Why?
 I found myself writing code like this a lot in my React components:
-```html
+```jsx
 <div className="c-componentName">
   <div className="c-componentName__inner">
     Some test
@@ -33,14 +33,14 @@ Compare that to SCSS, where you might write components something like this:
 `react-bem-helper` allows you to write in a similar-ish DRY fashion, taking away some of the repetition and hopefully making it easier to scan.
 
 ## How does it work?
-A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'componentName' }`. If you want, a prefix like `c-` can be automatically added by supplying an [options object](#preparing-the-helper).
+A new helper instance is created with a an options object or a string representing the name of the component (`componentName`) in this example. The instantiated helper receives up to three arguments (element, modifiers, extra classes). When called, it generates a simple object with props that should be applied to the DOM element, for example ` { classNames: 'componentName' }`. If you want, a prefix like `c-` can be automatically added by supplying an [options object](#preparing-the-helper).  It can also return a plain string containing the classname when the `outputIsString` option is set true.
 
 You can use the spread operator (`{...object}`) to apply the classes to the DOM element. Even though this is an ES6 feature, React compiles this to it's own ES5 compatible version.
 
 ## Example
 Here's how you would return [the example HTML structure](#why) when using the helper.
 
-```js
+```jsx
 var React     = require('react');
 var BEMHelper = require('react-bem-helper');
 
@@ -72,23 +72,25 @@ module.exports = React.createClass({
 ### Preparing the helper
 Require the helper for your React component, and then instantiate a new instance of it, supplying an options object or a string representing the (block) name of the component.
 
-```javascript
+```jsx
 var BEMhelper = require('react-bem-helper');
 
 // Make 'componentName' the base name
 var bemHelper = new BEMHelper('componentName')
 
-// Or pass an options object with a prefix to be applied to all components
+// Or pass an options object with a prefix to be applied to all components and output set to return
+// a string instead of an object
 var bemHelper2 = new BEMHelper({
   name: 'componentName',
   prefix: 'mh-',
-  modifierDelimiter: false
+  modifierDelimiter: false,
+  outputIsString: true
 });
 ```
 
 ### Using the helper
 When executed, the helper returns an object with a `className` property. When the helper is called without any arguments, its value will consist of the block name and a prefix:
-```js
+```jsx
 var React     = require('react'),
     BEMHelper = require('react-bem-helper');
 
@@ -104,11 +106,11 @@ module.exports = React.createClass({
 });
 ```
 
-The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra` classes, although _an object containing any of these parameters is also supported:_
-
 #### Alternate Syntax
 
-```js
+The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra` classes, although _an object containing any of these parameters is also supported:_
+
+```jsx
 var React     = require('react'),
     BEMHelper = require('react-bem-helper');
 
@@ -130,10 +132,29 @@ module.exports = React.createClass({
 });
 ```
 
+Additonally, with a constructor option or by [setting custom defaults](#withdefaults), you can have the helper return plain strings.  It is a stylistic choice, but it can come in handy when you need to pass a class name in under a different property name, such as with [react-router's Link](https://github.com/ReactTraining/react-router/blob/v3/docs/API.md#activeclassname) component.
+
+```jsx
+var React     = require('react'),
+    Link      = require('react-router/lib/Link'),
+    BEMHelper = require('react-bem-helper');
+
+var classes = new BEMHelper({ name: 'componentName', outputIsString: true });
+
+module.exports = React.createClass({
+  render: function() {
+    return (
+      <Link className={classes('link')} activeClassName={classes('link', 'active')} />
+    );
+    // Returns <Link className='componentName__link' activeClassName='componentName__link componentName__link--active' />
+  }
+});
+```
+
 #### Element
 To generate a class like `componentName__header`, pass `"header"` as the first argument to the bemHelper.
 
-```js
+```jsx
 var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
@@ -142,14 +163,14 @@ bemHelper('header'); // returns { className: 'componentName__header' }
 
 You can also pass a configuration object instead of the first parameter:
 
-```js
+```jsx
 bemHelper({ element: 'header' }); // returns { className: 'componentName__header' }
 ```
 
 #### Modifiers
 Modifiers can be added as a `String`, `Array`, or `Object`. For every modifier an additional class is generated, based upon either the block name or element name:
 
-```js
+```jsx
 var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
@@ -158,6 +179,9 @@ bemHelper(null, 'active');
 bemHelper({ modifiers: 'active' });
 // { className: 'componentName--active'}
 
+bemHelper('lol', 'active funny');
+// { className: 'componentName__lol componentName__lol--active componentName__lol--funny'}
+
 bemHelper('lol', 'active');
 // { className: 'componentName__lol componentName__lol--active'}
 
@@ -165,11 +189,12 @@ bemHelper('lol', ['active', 'funny']);
 // { className: 'componentName__lol componentName__lol--active componentName__lol--funny'}
 
 bemHelper('lol', {
-  active: true,
-  funny: false,
-  playing: function() { return false;}
+  'active': true,
+  'funny': false,
+  'playing': function() { return false; }
+  'stopped notfunny': function() { return true; }
 });
-// { className: 'componentName__lol componentName__lol--active'}
+// { className: 'componentName__lol componentName__lol--active componentName__lol--stopped componentName__lol--notfunny'}
 ```
 
 If you pass an object as the modifiers argument, the helper will add the keys as classes for which their corresponding values are true. If a function is passed as a value, this function is executed.
@@ -177,7 +202,7 @@ If you pass an object as the modifiers argument, the helper will add the keys as
 #### Extra classes
 This argument allows you to do add extra classes to the element. Like the modifiers, extra classes can be added as a `String`, `Array`, or `Object`. The behaviour is the same, except that the classes are added as passed, and no prefix or block name is added.
 
-```js
+```jsx
 var BEMHelper = require('react-bem-helper');
 var bemHelper = new BEMHelper('componentName');
 
@@ -199,15 +224,15 @@ As when using arguments, this syntax also supports arrays and objects as differe
 ### Modifier Delimiter / Default BEM naming scheme
 For this project, I've chosen to use the `.block__element--modifier` naming scheme, because this seems to be the most common implementation. However, the official website on BEM [considers this to be an alternative naming scheme](https://en.bem.info/methodology/naming-convention/#modifier-name).
 
-If you like to use the default naming scheme, you can set the `modifierDelimiter` option to `_` when creating the bemHelper:
+If you like to use the default naming scheme, you can set the `modifierDelimiter` option to `_` when creating the bemHelper, or [set it as the default](#withdefaults):
 
-```js
+```jsx
 var classes = new BEMHelper({
   name: 'componentName',
   modifierDelimiter: '_'
 });
 
-…
+// ...
 
 module.exports = React.createClass({
   render: function() {
@@ -215,6 +240,42 @@ module.exports = React.createClass({
       <div {...classes('element', 'modifier')} />
     );
     // Returns <div className='componentName__element_modifier '/>
+  }
+});
+```
+
+### withDefaults
+Often, you will need to set defaults for your whole project, or maybe just one part of it.  That's where `BEMHelper.withDefaults()` comes in.  It creates a new constructor with one or more base defaults overridden.  For example:
+
+```js
+// custom-bem-helper.js
+
+var withDefaults = require('react-bem-helper').withDefaults;
+
+module.exports = withDefaults({
+  // You don't need to override all defaults. If you want to (for example) keep the original '--'
+  // modifier delimiter, just omit that field here.
+  prefix: 'pfx-',
+  modifierDelimiter: '_',
+  outputIsString: true
+});
+```
+
+Now, we just require our custom helper instead of `'react-bem-helper'`.
+
+```jsx
+// MyComponent.jsx
+var React     = require('react'),
+    BEMHelper = require('./custom-bem-helper');
+
+var classes = new BEMHelper('MyComponent');
+
+module.exports = React.createClass({
+  render: function() {
+    return (
+      <div className={classes('element', 'modifier')} />
+    );
+    // Returns <div className='pfx-MyComponent__element pfx-MyComponent__element_modifier'/>
   }
 });
 ```
