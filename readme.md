@@ -280,5 +280,11 @@ module.exports = React.createClass({
 });
 ```
 
+## Related projects
+* [bem-classnames](https://github.com/pocotan001/bem-classnames)
+* [react-bem](https://github.com/cuzzo/react-bem)
+* [bem-cn](https://github.com/albburtsev/bem-cn)
+* [b_](https://github.com/azproduction/b_)
+
 ## License
 MIT License
