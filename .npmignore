@@ -1,0 +1,8 @@
+.travis.yml
+.gitignore
+node_modules
+*sublime.*
+spec/
+tests.js
+typings-tests.ts
+yarn.lock
