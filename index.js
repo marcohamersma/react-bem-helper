@@ -1,9 +1,5 @@
 var assign = require('object-assign');
 
-function pushArray(array, newElements) {
-  Array.prototype.push.apply(array, newElements);
-}
-
 function isObject(obj) {
   var type = typeof obj;
   return type === 'function' || (type === 'object' && !!obj);
@@ -22,10 +18,7 @@ function stringToArray(string) {
 }
 
 function objectToArray(object) {
-  var keys   = Object.keys(object);
-  var output = [];
-
-  keys.forEach(function(key) {
+  return Object.keys(object).reduce(function(array, key) {
     var predicate = object[key];
 
     if (isFunction(predicate)) {
@@ -33,11 +26,11 @@ function objectToArray(object) {
     }
 
     if (predicate) {
-      pushArray(output, stringToArray(key));
+      return array.concat(stringToArray(key));
+    } else {
+      return array;
     }
-  });
-
-  return output;
+  }, []);
 }
 
 function listToArray(list) {
@@ -85,28 +78,19 @@ function withDefaults(defaults) {
         element = first;
       }
 
-      var rootName;
-      if (element) {
-        rootName = blockName + '__' + element;
-      } else {
-        rootName = blockName;
-      }
-
-      // Always include the root name first
-      var classNames = [rootName];
-
-      // Push on modifiers list and extraClassNames list
-      pushArray(classNames, listToArray(modifiers).map(function(modifier) {
-        return rootName + modifierDelimiter + modifier;
-      }));
-      pushArray(classNames, listToArray(extraClassNames));
-
-      var classNameString = classNames.join(' ').trim();
+      var rootName = element ? blockName + '__' + element : blockName;
+      var className = [rootName]
+        .concat(listToArray(modifiers).map(function(modifier) {
+          return rootName + modifierDelimiter + modifier;
+        }))
+        .concat(listToArray(extraClassNames))
+        .join(' ')
+        .trim();
 
       if (outputIsString) {
-        return classNameString;
+        return className;
       } else {
-        return { className: classNameString };
+        return { className: className };
       }
     };
   };
