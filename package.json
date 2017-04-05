@@ -1,6 +1,6 @@
 {
   "name": "react-bem-helper",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "allows you to easily add BEM-style element and modifier classes to React elements, while hopefully making it easier to scan.",
   "main": "index.js",
   "types": "index.d.ts",
