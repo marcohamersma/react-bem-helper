@@ -1,5 +1,5 @@
 # React BEM helper
-[![npm version](https://badge.fury.io/js/react-bem-helper.svg)](http://badge.fury.io/js/react-bem-helper)
+[![npm version](https://badge.fury.io/js/react-bem-helper.svg)](http://badge.fury.io/js/react-bem-helper) [![Build Status](https://travis-ci.org/marcohamersma/react-bem-helper.svg?branch=master)](https://travis-ci.org/marcohamersma/react-bem-helper)
 
 A helper making it easier to name React.js components according to [BEM conventions](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/). It removes the repetition from writing the component name multiple times for elements and elements with modifier classes on them.
 
@@ -89,7 +89,7 @@ var bemHelper2 = new BEMHelper({
 ```
 Options can be shared throughout a project by using [withDefaults()](#withdefaults).
 
-#### Options
+#### Constructor options
 | Name                     | Type      | Default  | Description                                    |
 |--------------------------|-----------|----------|------------------------------------------------|
 | `name`                   | `string`  | Required | The name of the BEM block.                     |
@@ -123,37 +123,30 @@ module.exports = React.createClass({
 |------------------|-----------------------------------------|----------|--------------------------|
 | [`element`][3]   | `string`                                | `''`     | The name of the BEM element.|
 | [`modifiers`][4] | `string` or `string[]` or `object` (\*) | `''`     | A set of BEM modifiers.  |
-| [`extra`][5]     | `string` or `string[]` or `object` (\*) | `''`     | A set of plain, unprefixed classes. |
+| [`extra`][5]     | `string` or `string[]` or `object` (\*) | `''`     | A set of plain, non-BEM classes. |
 
 [3]: #element
 [4]: #modifiers
 [5]: #extra-classes
 
-**(\*)** _Class sets are represented as space-separated string or array of space-separated strings or an object mapping space-separated strings to booleans or boolean-valued functions._
+**(\*)** _These parameters can be either strings, array of strings, or an object whose keys will be applied if their values are evaluated as truthy (booleans or functions returning booleans). If any of the strings contain spaces, these will be split up._
 
 #### Alternate Syntax
 The bemHelper supports up to three arguments: `element`, `modifiers`, and `extra` classes, although _an object containing any of these parameters is also supported:_
 
 ```jsx
-var React     = require('react'),
-    BEMHelper = require('react-bem-helper');
+function element() {
+  var options = {
+    element:   'element',
+    modifiers: 'modifier',
+    extra:     'extra'
+  };
 
-var classes = new BEMHelper('componentName');
-
-module.exports = React.createClass({
-  render: function() {
-    var options = {
-      element:   'element',
-      modifiers: 'modifier',
-      extra:     'extra'
-    };
-
-    return (
-      <div {...classes(options)} />
-    );
-    // Returns <div className='componentName__element componentName__element--modifier extra'/>
-  }
-});
+  return (
+    <div {...classes(options)} />
+  );
+  // Returns <div className='componentName__element componentName__element--modifier extra'/>
+};
 ```
 
 #### Element
