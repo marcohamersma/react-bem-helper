@@ -76,6 +76,11 @@ describe('react-bem-helper', function() {
       expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two block--three'));
     });
 
+    it('as an array containing falsy values, should ignore them', function() {
+      var modifiers = ['one', false, 0, null, '', undefined];
+      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one'));
+    })
+
     it('as an object, should return classNames for the element and each modifier that is truthy', function() {
       var modifiers = {
         'one': false,
