@@ -70,11 +70,16 @@ describe('react-bem-helper', function() {
     });
   });
 
-  describe(', when given multiple modifiers', function() {
+  describe('when given multiple modifiers', function() {
     it('as an array, should return classNames for the element and each modifier given', function() {
       var modifiers = ['one', 'two three'];
       expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one block--two block--three'));
     });
+
+    it('as an array containing falsy values, should ignore them', function() {
+      var modifiers = ['one', false, 0, null, '', undefined];
+      expect(bemhelper('', modifiers)).toEqual(resultWithClassName('block block--one'));
+    })
 
     it('as an object, should return classNames for the element and each modifier that is truthy', function() {
       var modifiers = {
@@ -83,7 +88,8 @@ describe('react-bem-helper', function() {
         'three': false,
         'four': function() { return false; },
         'five': function() { return true; },
-        'six seven': true
+        'six seven': true,
+        '': true
       };
 
       var result = 'block block--two block--five block--six block--seven';
@@ -100,6 +106,11 @@ describe('react-bem-helper', function() {
     expect(bemhelper('element', '', extraClasses)).toEqual(resultWithClassName('block__element one two'));
     expect(bemhelper({ extra: extraClasses })).toEqual(resultWithClassName('block one two'));
   });
+
+  it('should ignore falsy extra classNames when part of an array', function() {
+    var extraClasses = [0, null, false, undefined, ''];
+    expect(bemhelper('', '', extraClasses)).toEqual(resultWithClassName('block'));
+  })
 
   it('should append extra classNames for truthy values when given as an object', function() {
     var extraClasses = {
