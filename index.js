@@ -18,7 +18,7 @@ function stringToArray(string) {
 }
 
 function objectToArray(object) {
-  return Object.keys(object).reduce(function(output, key) {
+  return Object.keys(object).reduce(function(array, key) {
     var predicate = object[key];
 
     if (isFunction(predicate)) {
@@ -26,9 +26,9 @@ function objectToArray(object) {
     }
 
     if (predicate) {
-      return output.concat(stringToArray(key));
+      return array.concat(stringToArray(key));
     } else {
-      return output;
+      return array;
     }
   }, []);
 }
