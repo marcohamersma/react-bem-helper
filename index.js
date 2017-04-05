@@ -37,13 +37,9 @@ function listToArray(list) {
   if (isString(list) && list !== '') {
     return stringToArray(list);
   } else if (list && list.length) {
-    return list
-      .filter(function (string) {
-        return !!string;
-      })
-      .reduce(function (array, string) {
-        return array.concat(stringToArray(string));
-      }, []);
+    return list.reduce(function (array, string) {
+      return !!string ? array.concat(stringToArray(string)) : array;
+    }, []);
   } else if (isObject(list)) {
     return objectToArray(list);
   } else {
